@@ -2,20 +2,21 @@ package fastkit.core.adb.autoreboot;
 
 import fastkit.core.adb.GenericAdb;
 import fastkit.core.adb.Mode;
-import fastkit.util.exception.CommandErrorException;
+import fastkit.core.util.exception.CommandErrorException;
 
+import java.io.File;
 import java.io.IOException;
 
 public class AutoReboot implements GenericAdb {
     private Mode toMode;
     private Mode fromMode;
-    private String deviceModel;
+    private File deviceRecovery;
     private GenericAdb reboot;
 
-    public AutoReboot(Mode toMode, Mode fromMode, String deviceModel) {
+    public AutoReboot(Mode toMode, Mode fromMode, File deviceRecovery) {
         this.toMode = toMode;
         this.fromMode = fromMode;
-        this.deviceModel = deviceModel;
+        this.deviceRecovery = deviceRecovery;
     }
 
     @Override
@@ -31,7 +32,7 @@ public class AutoReboot implements GenericAdb {
                 break;
             }
             case recovery: {
-                this.reboot = new AutoRecovery(this.fromMode, this.deviceModel);
+                this.reboot = new AutoRecovery(this.fromMode, this.deviceRecovery);
                 this.reboot.exec();
                 break;
             }

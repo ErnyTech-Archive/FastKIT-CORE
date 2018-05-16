@@ -1,17 +1,14 @@
 package fastkit.core.adb;
 
-import fastkit.Utils;
-import fastkit.util.ExecCmd;
-import fastkit.util.exception.CommandErrorException;
+import fastkit.core.util.ExecCmd;
+import fastkit.core.util.GenericBinary;
+import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static fastkit.util.Utils.adb_bin;
-import static fastkit.util.Utils.fastboot_bin;
-
-public class GetDevices extends Utils implements GenericAdb {
+public class GetDevices implements GenericAdb {
     private String device_mode;
     private String device_serial;
     private String device_model;
@@ -48,7 +45,7 @@ public class GetDevices extends Utils implements GenericAdb {
     }
 
     private boolean isFastbootDevice() throws IOException, InterruptedException {
-        ExecCmd execCmd = new ExecCmd(fastboot_bin() + "devices");
+        ExecCmd execCmd = new ExecCmd(GenericBinary.getFastboot() + "devices");
         try {
             execCmd.exec();
         } catch (CommandErrorException e) {
@@ -86,14 +83,14 @@ public class GetDevices extends Utils implements GenericAdb {
     }
 
     private String foundDeviceMode() throws InterruptedException, IOException, CommandErrorException {
-        ExecCmd execCmd = new ExecCmd(adb_bin() + "get-state");
+        ExecCmd execCmd = new ExecCmd(GenericBinary.getAdb() + "get-state");
         execCmd.exec();
         this.output.append(execCmd.getStdout()).append(System.lineSeparator());
         return execCmd.getStdout().trim();
     }
 
     private String foundDeviceSerial() throws InterruptedException, IOException, CommandErrorException {
-        ExecCmd execCmd = new ExecCmd(adb_bin() + "get-serialno");
+        ExecCmd execCmd = new ExecCmd(GenericBinary.getAdb() + "get-serialno");
         execCmd.exec();
         this.output.append(execCmd.getStdout()).append(System.lineSeparator());
         return execCmd.getStdout().trim();

@@ -1,11 +1,10 @@
 package fastkit.core.adb;
 
-import fastkit.Utils;
-import fastkit.util.exception.CommandErrorException;
+import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
 
-public class WaitBoot extends Utils implements GenericAdb {
+public class WaitBoot implements GenericAdb {
     private Shell shell;
     private Mode waitmode;
     private GetDevices getDevices = new GetDevices();

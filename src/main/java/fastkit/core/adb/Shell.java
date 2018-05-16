@@ -1,20 +1,16 @@
 package fastkit.core.adb;
 
-import fastkit.Utils;
-import fastkit.util.ExecCmd;
-import fastkit.util.exception.CommandErrorException;
+import fastkit.core.util.ExecCmd;
+import fastkit.core.util.GenericBinary;
+import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Scanner;
 
-import static fastkit.util.Utils.adb_bin;
-
-public class Shell extends Utils implements GenericAdb {
+public class Shell implements GenericAdb {
     private ExecCmd execCmd;
 
     public Shell(String command) {
-        this.execCmd = new ExecCmd(adb_bin() + "shell" + sep  + command);
+        this.execCmd = new ExecCmd(GenericBinary.getAdb() + "shell" + sep  + command);
     }
 
     @Override

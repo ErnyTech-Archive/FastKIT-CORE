@@ -1,19 +1,17 @@
 package fastkit.core.fastboot;
 
-import fastkit.Utils;
 import fastkit.core.adb.GenericAdb;
-import fastkit.util.ExecCmd;
-import fastkit.util.exception.CommandErrorException;
+import fastkit.core.util.ExecCmd;
+import fastkit.core.util.GenericBinary;
+import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
 
-import static fastkit.util.Utils.fastboot_bin;
-
-public class SetLock extends Utils implements GenericAdb {
+public class SetLock implements GenericAdb {
     private ExecCmd execCmd;
 
     public SetLock(LockState lockState, String device) {
-        this.execCmd = new ExecCmd(fastboot_bin() + getFastbootCmd(lockState, device));
+        this.execCmd = new ExecCmd(GenericBinary.getFastboot() + getFastbootCmd(lockState, device));
     }
 
 

@@ -4,26 +4,25 @@ import fastkit.core.adb.GenericAdb;
 import fastkit.core.adb.Mode;
 import fastkit.core.adb.Reboot;
 import fastkit.core.adb.WaitBoot;
-import fastkit.core.fastboot.FastbootContinue;
-import fastkit.util.exception.CommandErrorException;
+import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
 
-public class AutoDevice implements GenericAdb {
+public class AutoFastboot implements GenericAdb {
     private Mode fromMode;
     private GenericAdb reboot;
     private StringBuilder outputs = new StringBuilder();
     private int returnValue = 0;
 
-    public AutoDevice(Mode fromMode) {
+    public AutoFastboot(Mode fromMode) {
         this.fromMode = fromMode;
     }
 
     @Override
     public void exec() throws InterruptedException, IOException, CommandErrorException {
         switch (this.fromMode) {
-            case recovery: {
-                reboot = new Reboot(Mode.device);
+            case device: {
+                reboot = new Reboot(Mode.fastboot);
                 reboot.exec();
                 outputs.append(reboot.getOutput()).append(System.lineSeparator());
                 if (reboot.getReturnValue() != 0) {
@@ -31,8 +30,8 @@ public class AutoDevice implements GenericAdb {
                 }
                 break;
             }
-            case fastboot: {
-                reboot = new FastbootContinue();
+            case recovery: {
+                reboot = new Reboot(Mode.fastboot);
                 reboot.exec();
                 outputs.append(reboot.getOutput()).append(System.lineSeparator());
                 if (reboot.getReturnValue() != 0) {
@@ -41,7 +40,7 @@ public class AutoDevice implements GenericAdb {
                 break;
             }
         }
-        WaitBoot waitBoot = new WaitBoot(Mode.device);
+        WaitBoot waitBoot = new WaitBoot(Mode.fastboot);
         waitBoot.exec();
         outputs.append(waitBoot.getOutput()).append(System.lineSeparator());
         if (waitBoot.getReturnValue() != 0) {

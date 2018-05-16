@@ -3,20 +3,23 @@ package fastkit.core;
 import fastkit.core.adb.GetDevices;
 import fastkit.core.adb.Mode;
 import fastkit.core.adb.autoreboot.AutoReboot;
-import fastkit.util.exception.CommandErrorException;
-import javafx.stage.Stage;
+import fastkit.core.util.exception.CommandErrorException;
 
-import javafx.event.ActionEvent;
+import java.io.File;
 import java.io.IOException;
 
 public abstract class Executor {
     private Mode mode;
-    private String deviceModel;
     private Thread execThread;
+    private File deviceRecovery;
 
-    public Executor(Mode mode, String deviceModel) {
+    public Executor(Mode mode) {
         this.mode = mode;
-        this.deviceModel = deviceModel;
+    }
+
+    public Executor(Mode mode, File deviceRecovery) {
+        this.mode = mode;
+        this.deviceRecovery = deviceRecovery;
     }
 
     public void exec() {
@@ -42,15 +45,22 @@ public abstract class Executor {
             return;
         }
 
-        AutoReboot autoReboot = new AutoReboot(this.mode, getDevices.getMode(), this.deviceModel);
-        try {
-            autoReboot.exec();
-        } catch (InterruptedException | IOException e) {
-            onError(e);
-            return;
-        } catch (CommandErrorException e) {
-            onError(e, autoReboot.getOutput());
-            return;
+        if (this.deviceRecovery != null) {
+            AutoReboot autoReboot = new AutoReboot(this.mode, getDevices.getMode(), this.deviceRecovery);
+            try {
+                autoReboot.exec();
+            } catch (InterruptedException | IOException e) {
+                onError(e);
+                return;
+            } catch (CommandErrorException e) {
+                onError(e, autoReboot.getOutput());
+                return;
+            }
+        } else {
+            if (this.mode != getDevices.getMode()) {
+                onError(new Exception("Device is not in required mode"));
+                return;
+            }
         }
 
         command();

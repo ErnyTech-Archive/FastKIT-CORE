@@ -1,19 +1,17 @@
 package fastkit.core.fastboot;
 
-import fastkit.Utils;
 import fastkit.core.adb.GenericAdb;
-import fastkit.util.ExecCmd;
-import fastkit.util.exception.CommandErrorException;
+import fastkit.core.util.ExecCmd;
+import fastkit.core.util.GenericBinary;
+import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
 
-import static fastkit.util.Utils.fastboot_bin;
-
-public class FastbootContinue extends Utils implements GenericAdb {
+public class FastbootContinue implements GenericAdb {
     private ExecCmd execCmd;
 
     public FastbootContinue() {
-        this.execCmd = new ExecCmd(fastboot_bin() + "continue");
+        this.execCmd = new ExecCmd(GenericBinary.getFastboot() + "continue");
     }
 
     @Override

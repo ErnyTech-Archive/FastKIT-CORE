@@ -1,21 +1,17 @@
 package fastkit.core.adb;
 
-import fastkit.Utils;
-import fastkit.util.ExecCmd;
-import fastkit.util.exception.CommandErrorException;
+import fastkit.core.util.ExecCmd;
+import fastkit.core.util.GenericBinary;
+import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Scanner;
 
-import static fastkit.util.Utils.adb_bin;
-
-public class Pull extends Utils implements GenericAdb {
+public class Push implements GenericAdb {
     private ExecCmd execCmd;
 
-    public Pull(String remoteFile, File localFile) {
-        execCmd = new ExecCmd(adb_bin() + "pull" + sep + remoteFile + sep + localFile);
+    public Push(File localFile, String remoteFile) {
+        execCmd = new ExecCmd(GenericBinary.getAdb() + "push" + sep + localFile + sep + remoteFile);
     }
 
     @Override

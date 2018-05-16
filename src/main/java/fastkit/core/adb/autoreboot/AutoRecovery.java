@@ -5,21 +5,20 @@ import fastkit.core.adb.Mode;
 import fastkit.core.adb.Reboot;
 import fastkit.core.adb.WaitBoot;
 import fastkit.core.fastboot.BootRecovery;
-import fastkit.core.fastboot.DeviceRecovery;
-import fastkit.core.fastboot.FastbootContinue;
-import fastkit.util.exception.CommandErrorException;
+import fastkit.core.util.exception.CommandErrorException;
 
+import java.io.File;
 import java.io.IOException;
 
 public class AutoRecovery implements GenericAdb {
     private Mode fromMode;
-    private String deviceModel;
     private StringBuilder outputs = new StringBuilder();
     private int returnValue = 0;
+    private File deviceRecovery;
 
-    public AutoRecovery(Mode fromMode, String deviceModel) {
+    public AutoRecovery(Mode fromMode, File deviceRecovery) {
         this.fromMode = fromMode;
-        this.deviceModel = deviceModel;
+        this.deviceRecovery = deviceRecovery;
     }
 
     @Override
@@ -58,7 +57,7 @@ public class AutoRecovery implements GenericAdb {
     }
 
     private void bootRecovery() throws InterruptedException, IOException, CommandErrorException {
-        BootRecovery bootRecovery = new BootRecovery(new DeviceRecovery(this.deviceModel).get());
+        BootRecovery bootRecovery = new BootRecovery(this.deviceRecovery);
         bootRecovery.exec();
         outputs.append(bootRecovery.getOutput()).append(System.lineSeparator());
         if (bootRecovery.getReturnValue() != 0) {
