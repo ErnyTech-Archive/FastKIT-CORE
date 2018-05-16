@@ -1,0 +1,37 @@
+FastKIT CORE
+============
+
+FastKIT CORE is an advanced library that allows you to conveniently call the ADB and FASTBOOT commands in any software that allows the linking of Java libraries.
+
+FastKIT CORE is developed directly by the FastKIT Toolkit Team for FastKIT, however it can be used for any software that needs an ADB or FASTBOOT bridge.
+
+The library includes the ability to execute asynchronous ADB or FASTBOOT commands by creating a thread and is completely safe, any exception is captured and managed.
+
+
+LICENSE
+=======
+  FastKIT CORE, an advanced Java library for ADB and FASTBOOT
+    Copyright (C) 2018  Ernesto Castellotti <erny.castell@gmail.com>
+    
+    Ernesto Castellotti is the copyright holder of this software, for 
+    any need, do not hesitate to contact him.
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    other licenses that will be described below.
+    
+    Can freely choose which license to use among these:
+        -GNU Lesser General Public License 
+        -GNU General Public License
+        -GNU Affero General Public License
+    at the versions described above in this program, but no other license is 
+    accepted, except in case of choice by the copyright holder.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program in the file called "LICENSE".  If not, contact the copyright holder.
