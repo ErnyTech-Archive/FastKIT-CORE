@@ -2,7 +2,6 @@ package fastkit.core.fastboot;
 
 import fastkit.core.adb.GenericAdb;
 import fastkit.core.util.ExecCmd;
-import fastkit.core.util.GenericBinary;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.File;
@@ -10,14 +9,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static fastkit.core.Executor.fastboot;
+
 public class FlashRecovery implements GenericAdb {
     private List<ExecCmd> execCmds = new ArrayList<>();
     private StringBuilder outputs = new StringBuilder();
     private List<Integer> returnValues = new ArrayList<>();
 
     public FlashRecovery(File recovery) {
-        execCmds.add(new ExecCmd(GenericBinary.getFastboot() + "erase recovery"));
-        execCmds.add(new ExecCmd(GenericBinary.getFastboot() + "flash recovery" + sep + recovery));
+        execCmds.add(new ExecCmd(fastboot + "erase recovery"));
+        execCmds.add(new ExecCmd(fastboot + "flash recovery" + sep + recovery));
     }
 
     @Override

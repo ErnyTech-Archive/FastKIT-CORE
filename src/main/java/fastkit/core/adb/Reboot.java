@@ -1,10 +1,11 @@
 package fastkit.core.adb;
 
 import fastkit.core.util.ExecCmd;
-import fastkit.core.util.GenericBinary;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
+
+import static fastkit.core.Executor.adb;
 
 public class Reboot implements GenericAdb {
     private ExecCmd execCmd;
@@ -12,15 +13,15 @@ public class Reboot implements GenericAdb {
     public Reboot(Mode reboot) {
         switch (reboot) {
             case device: {
-                execCmd = new ExecCmd(GenericBinary.getAdb() + "reboot");
+                execCmd = new ExecCmd(adb + "reboot");
                 break;
             }
             case recovery: {
-                execCmd = new ExecCmd(GenericBinary.getAdb() + "reboot recovery");
+                execCmd = new ExecCmd(adb + "reboot recovery");
                 break;
             }
             case fastboot: {
-                execCmd = new ExecCmd(GenericBinary.getAdb() + "reboot bootloader");
+                execCmd = new ExecCmd(adb + "reboot bootloader");
                 break;
             }
         }

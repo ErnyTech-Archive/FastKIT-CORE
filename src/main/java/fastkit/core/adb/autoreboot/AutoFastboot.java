@@ -40,7 +40,7 @@ public class AutoFastboot implements GenericAdb {
                 break;
             }
         }
-        WaitBoot waitBoot = new WaitBoot(Mode.fastboot);
+        var waitBoot = new WaitBoot(Mode.fastboot);
         waitBoot.exec();
         outputs.append(waitBoot.getOutput()).append(System.lineSeparator());
         if (waitBoot.getReturnValue() != 0) {

@@ -41,7 +41,7 @@ public class AutoDevice implements GenericAdb {
                 break;
             }
         }
-        WaitBoot waitBoot = new WaitBoot(Mode.device);
+        var waitBoot = new WaitBoot(Mode.device);
         waitBoot.exec();
         outputs.append(waitBoot.getOutput()).append(System.lineSeparator());
         if (waitBoot.getReturnValue() != 0) {

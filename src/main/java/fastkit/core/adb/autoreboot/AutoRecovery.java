@@ -25,7 +25,7 @@ public class AutoRecovery implements GenericAdb {
     public void exec() throws InterruptedException, IOException, CommandErrorException {
         switch (this.fromMode) {
             case device: {
-                Reboot rebootToFastboot = new Reboot(Mode.fastboot);
+                var rebootToFastboot = new Reboot(Mode.fastboot);
                 rebootToFastboot.exec();
                 outputs.append(rebootToFastboot.getOutput()).append(System.lineSeparator());
                 if (rebootToFastboot.getReturnValue() != 0) {
@@ -38,7 +38,7 @@ public class AutoRecovery implements GenericAdb {
                 bootRecovery();
             }
         }
-        WaitBoot waitBoot = new WaitBoot(Mode.recovery);
+        var waitBoot = new WaitBoot(Mode.recovery);
         waitBoot.exec();
         outputs.append(waitBoot.getOutput()).append(System.lineSeparator());
         if (waitBoot.getReturnValue() != 0) {
@@ -57,7 +57,7 @@ public class AutoRecovery implements GenericAdb {
     }
 
     private void bootRecovery() throws InterruptedException, IOException, CommandErrorException {
-        BootRecovery bootRecovery = new BootRecovery(this.deviceRecovery);
+        var bootRecovery = new BootRecovery(this.deviceRecovery);
         bootRecovery.exec();
         outputs.append(bootRecovery.getOutput()).append(System.lineSeparator());
         if (bootRecovery.getReturnValue() != 0) {

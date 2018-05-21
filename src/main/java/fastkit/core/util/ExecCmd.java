@@ -23,12 +23,12 @@ public class ExecCmd {
         if (Thread.currentThread().isInterrupted()) {
             throw new InterruptedException("Thread is Interrupted");
         }
-        Process process = this.processBuilder.start();
+        var process = this.processBuilder.start();
         process.waitFor();
 
         this.returnValue = process.exitValue();
-        InputStream stdout_stream = process.getInputStream();
-        Scanner stdout_scanner = new Scanner(stdout_stream).useDelimiter("\\A");
+        var stdout_stream = process.getInputStream();
+        var stdout_scanner = new Scanner(stdout_stream).useDelimiter("\\A");
         this.stdout = stdout_scanner.hasNext() ? stdout_scanner.next().trim() : "";
 
         if (this.returnValue != 0) {

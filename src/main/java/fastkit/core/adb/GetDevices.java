@@ -1,12 +1,13 @@
 package fastkit.core.adb;
 
 import fastkit.core.util.ExecCmd;
-import fastkit.core.util.GenericBinary;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import static fastkit.core.Executor.adb;
+import static fastkit.core.Executor.fastboot;
 
 public class GetDevices implements GenericAdb {
     private String device_mode;
@@ -45,13 +46,13 @@ public class GetDevices implements GenericAdb {
     }
 
     private boolean isFastbootDevice() throws IOException, InterruptedException {
-        ExecCmd execCmd = new ExecCmd(GenericBinary.getFastboot() + "devices");
+        var execCmd = new ExecCmd(fastboot + "devices");
         try {
             execCmd.exec();
         } catch (CommandErrorException e) {
             return false;
         }
-        String fastboot_devices = execCmd.getStdout().trim();
+        var fastboot_devices = execCmd.getStdout().trim();
         this.output.append(execCmd.getStdout()).append(System.lineSeparator());
         this.returnValutes.add(execCmd.getReturnValue());
         return fastboot_devices.contains("fastboot");
@@ -83,21 +84,21 @@ public class GetDevices implements GenericAdb {
     }
 
     private String foundDeviceMode() throws InterruptedException, IOException, CommandErrorException {
-        ExecCmd execCmd = new ExecCmd(GenericBinary.getAdb() + "get-state");
+        var execCmd = new ExecCmd(adb + "get-state");
         execCmd.exec();
         this.output.append(execCmd.getStdout()).append(System.lineSeparator());
         return execCmd.getStdout().trim();
     }
 
     private String foundDeviceSerial() throws InterruptedException, IOException, CommandErrorException {
-        ExecCmd execCmd = new ExecCmd(GenericBinary.getAdb() + "get-serialno");
+        var execCmd = new ExecCmd(adb + "get-serialno");
         execCmd.exec();
         this.output.append(execCmd.getStdout()).append(System.lineSeparator());
         return execCmd.getStdout().trim();
     }
 
     private String foundDeviceModel() throws InterruptedException, IOException, CommandErrorException {
-        Shell shell = new Shell("getprop | grep ro.product.model");
+        var shell = new Shell("getprop | grep ro.product.model");
         shell.exec();
         this.output.append(shell.getOutput()).append(System.lineSeparator());
         return shell.getOutput()

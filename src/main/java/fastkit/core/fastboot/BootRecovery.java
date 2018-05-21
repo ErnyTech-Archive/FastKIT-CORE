@@ -2,17 +2,18 @@ package fastkit.core.fastboot;
 
 import fastkit.core.adb.GenericAdb;
 import fastkit.core.util.ExecCmd;
-import fastkit.core.util.GenericBinary;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.File;
 import java.io.IOException;
 
+import static fastkit.core.Executor.fastboot;
+
 public class BootRecovery implements GenericAdb {
     private ExecCmd execCmd;
 
     public BootRecovery(File recovery) {
-        this.execCmd = new ExecCmd(GenericBinary.getFastboot() + "boot" + sep + recovery);
+        this.execCmd = new ExecCmd(fastboot + "boot" + sep + recovery);
     }
 
     @Override

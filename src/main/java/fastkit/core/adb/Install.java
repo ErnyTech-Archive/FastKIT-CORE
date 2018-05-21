@@ -1,17 +1,18 @@
 package fastkit.core.adb;
 
 import fastkit.core.util.ExecCmd;
-import fastkit.core.util.GenericBinary;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.File;
 import java.io.IOException;
 
+import static fastkit.core.Executor.adb;
+
 public class Install implements GenericAdb {
     private ExecCmd execCmd;
 
     public Install(File localFile) {
-        execCmd = new ExecCmd(GenericBinary.getAdb() + "install" + sep + localFile);
+        execCmd = new ExecCmd(adb + "install" + sep + localFile);
     }
 
     @Override
