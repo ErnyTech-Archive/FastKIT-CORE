@@ -6,8 +6,8 @@ import fastkit.core.util.exception.CommandErrorException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import static fastkit.core.Executor.adb;
-import static fastkit.core.Executor.fastboot;
+import static fastkit.core.executor.Executor.adb;
+import static fastkit.core.executor.Executor.fastboot;
 
 public class GetDevices implements GenericAdb {
     private String device_mode;

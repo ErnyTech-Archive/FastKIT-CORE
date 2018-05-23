@@ -6,7 +6,7 @@ import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
 
-import static fastkit.core.Executor.fastboot;
+import static fastkit.core.executor.Executor.fastboot;
 
 public class FastbootContinue implements GenericAdb {
     private ExecCmd execCmd;

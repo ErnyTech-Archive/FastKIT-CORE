@@ -3,7 +3,6 @@ package fastkit.core.util;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Scanner;
 

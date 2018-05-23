@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static fastkit.core.Executor.fastboot;
+import static fastkit.core.executor.Executor.fastboot;
 
 public class FlashRecovery implements GenericAdb {
     private List<ExecCmd> execCmds = new ArrayList<>();

@@ -7,7 +7,7 @@ import fastkit.core.util.exception.CommandErrorException;
 import java.io.File;
 import java.io.IOException;
 
-import static fastkit.core.Executor.fastboot;
+import static fastkit.core.executor.Executor.fastboot;
 
 public class BootRecovery implements GenericAdb {
     private ExecCmd execCmd;

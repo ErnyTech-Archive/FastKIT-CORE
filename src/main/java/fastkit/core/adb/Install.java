@@ -6,7 +6,7 @@ import fastkit.core.util.exception.CommandErrorException;
 import java.io.File;
 import java.io.IOException;
 
-import static fastkit.core.Executor.adb;
+import static fastkit.core.executor.Executor.adb;
 
 public class Install implements GenericAdb {
     private ExecCmd execCmd;
