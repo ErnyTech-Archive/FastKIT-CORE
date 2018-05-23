@@ -19,4 +19,12 @@ public abstract class Executor extends ExecutorUtils implements GenericExecutor 
     public Executor(Mode mode) {
         this.mode = mode;
     }
+
+    public static void setAdb(String adbpath) {
+        Executor.adb = adbpath;
+    }
+
+    public static void setFastboot(String fastbootpath) {
+        Executor.fastboot = fastbootpath;
+    }
 }

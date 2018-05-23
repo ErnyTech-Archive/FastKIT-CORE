@@ -14,8 +14,6 @@ public interface GenericExecutor {
     public List<GenericApi> getAdbApis();
     public List<String> getOutputs();
     public List<Integer> getReturnValues();
-    public void setAdb(String adbpath);
-    public void setFastboot(String fastbootpath);
     void call(GenericApi api) throws ExecutorErrorException;
     void error(Exception e) throws ExecutorErrorException;
     void error(Exception e, String output) throws ExecutorErrorException;

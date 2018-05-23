@@ -74,16 +74,6 @@ public abstract class ASyncExecutor extends Executor {
     }
 
     @Override
-    public void setAdb(String adbpath) {
-        Executor.adb = adbpath;
-    }
-
-    @Override
-    public void setFastboot(String fastbootpath) {
-        Executor.fastboot = fastbootpath;
-    }
-
-    @Override
     public void call(GenericApi api) throws ExecutorErrorException {
         try {
             api.exec();
