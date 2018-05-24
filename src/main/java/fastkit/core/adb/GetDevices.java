@@ -1,106 +1,68 @@
 package fastkit.core.adb;
 
+import fastkit.core.GenericApi;
+import fastkit.core.util.Device;
 import fastkit.core.util.ExecCmd;
+import fastkit.core.util.Logger;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import static fastkit.core.executor.Executor.adb;
-import static fastkit.core.executor.Executor.fastboot;
 
-public class GetDevices implements GenericAdb {
-    private String device_mode;
-    private String device_serial;
-    private String device_model;
-    private StringBuilder output = new StringBuilder();
-    private List<Integer> returnValutes = new ArrayList<>();
-
+public class GetDevices implements GenericApi {
+    private List<Device> devices = new ArrayList<>();
+    private Logger logger = new Logger();
 
     @Override
     public void exec() throws InterruptedException, IOException, CommandErrorException {
-        if(!isFastbootDevice()) {
-            this.device_mode = foundDeviceMode();
-            this.device_serial = foundDeviceSerial();
-            this.device_model = foundDeviceModel();
-        } else {
-            this.device_mode = "fastboot";
-            this.device_serial = null;
-            this.device_model = null;
+        var execAdbDevices = new ExecCmd(adb + "devices", this.logger);
+        execAdbDevices.exec();
+        var outputs = execAdbDevices.getStdout().split(System.lineSeparator());
+
+        for (String output : outputs) {
+            output = output.trim();
+
+            if (output.isEmpty()) {
+                continue;
+            }
+
+            if (output.contains("*")) {
+                continue;
+            }
+
+            var mode = output.split("\\s+")[1].trim();
+            var serial = output.split("\\s+")[0].trim();
+            var model = foundDeviceModel();
+
+            switch (mode) {
+                case "device" : {
+                    devices.add(new Device(Mode.device, serial, model));
+                    break;
+                }
+                case "recovery" : {
+                    devices.add(new Device(Mode.recovery, serial, model));
+                    break;
+                }
+            }
         }
     }
 
     @Override
-    public String getOutput() {
-        return this.output.toString();
+    public Logger getLog() {
+        return this.logger;
     }
 
-    @Override
-    public int getReturnValue() {
-       for(Integer value: this.returnValutes) {
-           if (value != 0) {
-               return -1;
-           }
-       }
-       return 0;
-    }
-
-    private boolean isFastbootDevice() throws IOException, InterruptedException {
-        var execCmd = new ExecCmd(fastboot + "devices");
-        try {
-            execCmd.exec();
-        } catch (CommandErrorException e) {
-            return false;
-        }
-        var fastboot_devices = execCmd.getStdout().trim();
-        this.output.append(execCmd.getStdout()).append(System.lineSeparator());
-        this.returnValutes.add(execCmd.getReturnValue());
-        return fastboot_devices.contains("fastboot");
-    }
-
-    public Mode getMode() {
-        switch (this.device_mode) {
-            case "device" : {
-                return Mode.device;
-            }
-            case "recovery" : {
-                return Mode.recovery;
-            }
-            case "fastboot" : {
-                return Mode.fastboot;
-            }
-            default: {
-                return null;
-            }
-        }
-    }
-
-    public String getSerial() {
-        return this.device_serial;
-    }
-
-    public String getModel() {
-        return this.device_model;
-    }
-
-    private String foundDeviceMode() throws InterruptedException, IOException, CommandErrorException {
-        var execCmd = new ExecCmd(adb + "get-state");
-        execCmd.exec();
-        this.output.append(execCmd.getStdout()).append(System.lineSeparator());
-        return execCmd.getStdout().trim();
-    }
-
-    private String foundDeviceSerial() throws InterruptedException, IOException, CommandErrorException {
-        var execCmd = new ExecCmd(adb + "get-serialno");
-        execCmd.exec();
-        this.output.append(execCmd.getStdout()).append(System.lineSeparator());
-        return execCmd.getStdout().trim();
+    public List<Device> get() {
+        return this.devices;
     }
 
     private String foundDeviceModel() throws InterruptedException, IOException, CommandErrorException {
         var shell = new Shell("getprop | grep ro.product.model");
         shell.exec();
-        this.output.append(shell.getOutput()).append(System.lineSeparator());
+        this.logger.add(shell);
         return shell.getOutput()
                 .split(":")[1]
                 .replace("[", "")

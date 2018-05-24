@@ -1,19 +1,19 @@
 package fastkit.core.adb.autoreboot;
 
-import fastkit.core.adb.GenericAdb;
+import fastkit.core.GenericApi;
 import fastkit.core.adb.Mode;
 import fastkit.core.adb.Reboot;
 import fastkit.core.adb.WaitBoot;
 import fastkit.core.fastboot.BootRecovery;
+import fastkit.core.util.Logger;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.File;
 import java.io.IOException;
 
-public class AutoRecovery implements GenericAdb {
+public class AutoRecovery implements GenericApi {
     private Mode fromMode;
-    private StringBuilder outputs = new StringBuilder();
-    private int returnValue = 0;
+    private Logger logger = new Logger();
     private File deviceRecovery;
 
     public AutoRecovery(Mode fromMode, File deviceRecovery) {
@@ -27,10 +27,7 @@ public class AutoRecovery implements GenericAdb {
             case device: {
                 var rebootToFastboot = new Reboot(Mode.fastboot);
                 rebootToFastboot.exec();
-                outputs.append(rebootToFastboot.getOutput()).append(System.lineSeparator());
-                if (rebootToFastboot.getReturnValue() != 0) {
-                    this.returnValue = 1;
-                }
+                logger.add(rebootToFastboot);
                 bootRecovery();
                 break;
             }
@@ -40,28 +37,17 @@ public class AutoRecovery implements GenericAdb {
         }
         var waitBoot = new WaitBoot(Mode.recovery);
         waitBoot.exec();
-        outputs.append(waitBoot.getOutput()).append(System.lineSeparator());
-        if (waitBoot.getReturnValue() != 0) {
-            this.returnValue = 1;
-        }
+        logger.add(waitBoot);
     }
 
     @Override
-    public String getOutput() {
-        return this.outputs.toString();
-    }
-
-    @Override
-    public int getReturnValue() {
-        return this.returnValue;
+    public Logger getLog() {
+        return this.logger;
     }
 
     private void bootRecovery() throws InterruptedException, IOException, CommandErrorException {
         var bootRecovery = new BootRecovery(this.deviceRecovery);
         bootRecovery.exec();
-        outputs.append(bootRecovery.getOutput()).append(System.lineSeparator());
-        if (bootRecovery.getReturnValue() != 0) {
-            this.returnValue = 1;
-        }
+        logger.add(bootRecovery);
     }
 }

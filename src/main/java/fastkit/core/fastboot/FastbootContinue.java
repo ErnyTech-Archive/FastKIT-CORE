@@ -1,32 +1,25 @@
 package fastkit.core.fastboot;
 
-import fastkit.core.adb.GenericAdb;
+import fastkit.core.GenericApi;
 import fastkit.core.util.ExecCmd;
+import fastkit.core.util.Logger;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
 
 import static fastkit.core.executor.Executor.fastboot;
 
-public class FastbootContinue implements GenericAdb {
-    private ExecCmd execCmd;
-
-    public FastbootContinue() {
-        this.execCmd = new ExecCmd(fastboot + "continue");
-    }
+public class FastbootContinue implements GenericApi {
+    private Logger logger = new Logger();
 
     @Override
     public void exec() throws InterruptedException, IOException, CommandErrorException {
-        this.execCmd.exec();
+        var fastbootContinue = new ExecCmd(fastboot + "continue", this.logger);
+        fastbootContinue.exec();
     }
 
     @Override
-    public String getOutput() {
-        return execCmd.getStdout();
-    }
-
-    @Override
-    public int getReturnValue() {
-        return execCmd.getReturnValue();
+    public Logger getLog() {
+        return this.logger;
     }
 }

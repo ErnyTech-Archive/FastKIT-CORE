@@ -1,17 +1,18 @@
 package fastkit.core.adb.autoreboot;
 
-import fastkit.core.adb.GenericAdb;
+import fastkit.core.GenericApi;
 import fastkit.core.adb.Mode;
+import fastkit.core.util.Logger;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.File;
 import java.io.IOException;
 
-public class AutoReboot implements GenericAdb {
+public class AutoReboot implements GenericApi {
     private Mode toMode;
     private Mode fromMode;
     private File deviceRecovery;
-    private GenericAdb reboot;
+    private Logger logger = new Logger();
 
     public AutoReboot(Mode toMode, Mode fromMode, File deviceRecovery) {
         this.toMode = toMode;
@@ -27,30 +28,30 @@ public class AutoReboot implements GenericAdb {
 
         switch (this.toMode) {
             case device: {
-                this.reboot = new AutoDevice(this.fromMode);
-                this.reboot.exec();
+                var rebootToDevice = new AutoDevice(this.fromMode);
+                rebootToDevice.exec();
+                logger.add(rebootToDevice);
                 break;
             }
             case recovery: {
-                this.reboot = new AutoRecovery(this.fromMode, this.deviceRecovery);
-                this.reboot.exec();
+                var rebootToRecovery = new AutoRecovery(this.fromMode, this.deviceRecovery);
+                rebootToRecovery.exec();
+                logger.add(rebootToRecovery);
                 break;
             }
             case fastboot: {
-                this.reboot = new AutoFastboot(this.fromMode);
-                this.reboot.exec();
+                var rebootToFastboot = new AutoFastboot(this.fromMode);
+                rebootToFastboot.exec();
+                logger.add(rebootToFastboot);
                 break;
             }
         }
     }
 
     @Override
-    public String getOutput() {
-        return this.reboot.getOutput();
+    public Logger getLog() {
+        return this.logger;
     }
 
-    @Override
-    public int getReturnValue() {
-        return this.reboot.getReturnValue();
-    }
+
 }

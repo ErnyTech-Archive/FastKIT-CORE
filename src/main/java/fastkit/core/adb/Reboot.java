@@ -1,44 +1,45 @@
 package fastkit.core.adb;
 
+import fastkit.core.GenericApi;
 import fastkit.core.util.ExecCmd;
+import fastkit.core.util.Logger;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
 
 import static fastkit.core.executor.Executor.adb;
 
-public class Reboot implements GenericAdb {
-    private ExecCmd execCmd;
+public class Reboot implements GenericApi {
+    private Mode reboot;
+    private Logger logger = new Logger();
 
     public Reboot(Mode reboot) {
-        switch (reboot) {
+        this.reboot = reboot;
+    }
+
+    @Override
+    public void exec() throws InterruptedException, IOException, CommandErrorException {
+        switch (this.reboot) {
             case device: {
-                execCmd = new ExecCmd(adb + "reboot");
+                var rebootDevice = new ExecCmd(adb + "reboot", this.logger);
+                rebootDevice.exec();
                 break;
             }
             case recovery: {
-                execCmd = new ExecCmd(adb + "reboot recovery");
+                var rebootRecovery = new ExecCmd(adb + "reboot recovery", this.logger);
+                rebootRecovery.exec();
                 break;
             }
             case fastboot: {
-                execCmd = new ExecCmd(adb + "reboot bootloader");
+                var rebootFastboot = new ExecCmd(adb + "reboot bootloader", this.logger);
+                rebootFastboot.exec();
                 break;
             }
         }
     }
 
     @Override
-    public void exec() throws InterruptedException, IOException, CommandErrorException {
-        execCmd.exec();
-    }
-
-    @Override
-    public String getOutput() {
-        return execCmd.getStdout();
-    }
-
-    @Override
-    public int getReturnValue() {
-        return execCmd.getReturnValue();
+    public Logger getLog() {
+        return this.logger;
     }
 }

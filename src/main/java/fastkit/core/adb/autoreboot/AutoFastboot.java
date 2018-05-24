@@ -1,18 +1,17 @@
 package fastkit.core.adb.autoreboot;
 
-import fastkit.core.adb.GenericAdb;
+import fastkit.core.GenericApi;
 import fastkit.core.adb.Mode;
 import fastkit.core.adb.Reboot;
 import fastkit.core.adb.WaitBoot;
+import fastkit.core.util.Logger;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
 
-public class AutoFastboot implements GenericAdb {
+public class AutoFastboot implements GenericApi {
     private Mode fromMode;
-    private GenericAdb reboot;
-    private StringBuilder outputs = new StringBuilder();
-    private int returnValue = 0;
+    private Logger logger = new Logger();
 
     public AutoFastboot(Mode fromMode) {
         this.fromMode = fromMode;
@@ -22,39 +21,25 @@ public class AutoFastboot implements GenericAdb {
     public void exec() throws InterruptedException, IOException, CommandErrorException {
         switch (this.fromMode) {
             case device: {
-                reboot = new Reboot(Mode.fastboot);
-                reboot.exec();
-                outputs.append(reboot.getOutput()).append(System.lineSeparator());
-                if (reboot.getReturnValue() != 0) {
-                    this.returnValue = 1;
-                }
+                var rebootFromDevice = new Reboot(Mode.fastboot);
+                rebootFromDevice.exec();
+                logger.add(rebootFromDevice);
                 break;
             }
             case recovery: {
-                reboot = new Reboot(Mode.fastboot);
-                reboot.exec();
-                outputs.append(reboot.getOutput()).append(System.lineSeparator());
-                if (reboot.getReturnValue() != 0) {
-                    this.returnValue = 1;
-                }
+                var rebootFromRecovery = new Reboot(Mode.fastboot);
+                rebootFromRecovery.exec();
+                logger.add(rebootFromRecovery);
                 break;
             }
         }
         var waitBoot = new WaitBoot(Mode.fastboot);
         waitBoot.exec();
-        outputs.append(waitBoot.getOutput()).append(System.lineSeparator());
-        if (waitBoot.getReturnValue() != 0) {
-            this.returnValue = 1;
-        }
+        logger.add(waitBoot);
     }
 
     @Override
-    public String getOutput() {
-        return this.outputs.toString();
-    }
-
-    @Override
-    public int getReturnValue() {
-        return this.returnValue;
+    public Logger getLog() {
+        return this.logger;
     }
 }

@@ -1,30 +1,21 @@
 package fastkit.core.adb;
 
+import fastkit.core.GenericApi;
+import fastkit.core.util.Logger;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.IOException;
 
-public class WaitBoot implements GenericAdb {
-    private Shell shell;
+public class WaitBoot implements GenericApi {
     private Mode waitmode;
-    private GetDevices getDevices = new GetDevices();
+    private Logger logger = new Logger();
 
     public WaitBoot(Mode reboot) {
         this.waitmode = reboot;
-        switch (reboot) {
-            case device: {
-                this.shell = new Shell("getprop | grep sys.boot_completed");
-                break;
-            }
-            case recovery: {
-                this.shell = new Shell("mount | grep /data");
-                break;
-            }
-        }
     }
 
     @Override
-    public void exec() throws InterruptedException, IOException, CommandErrorException {
+    public void exec() throws InterruptedException, IOException {
         switch (this.waitmode) {
             case device: {
                 waitSystem();
@@ -41,19 +32,28 @@ public class WaitBoot implements GenericAdb {
         }
     }
 
+    @Override
+    public Logger getLog() {
+        return this.logger;
+    }
+
     private void waitSystem() throws InterruptedException, IOException {
         int sys_boot_completed;
+        var waitSystem = new Shell("getprop | grep sys.boot_completed");
 
         while (true) {
             try {
-                this.shell.exec();
+                waitSystem.exec();
             } catch (CommandErrorException e) {
                 continue;
+            } finally {
+                this.logger.add(waitSystem.getOutput());
+                this.logger.add(waitSystem.getReturnValue());
             }
 
             try {
                 sys_boot_completed = Integer.parseInt(
-                        shell.getOutput()
+                        waitSystem.getOutput()
                                 .split(":")[1]
                                 .replace("[", "")
                                 .replace("]", "")
@@ -71,58 +71,35 @@ public class WaitBoot implements GenericAdb {
     }
 
     private void waitRecovery() throws IOException, InterruptedException {
+        var waitRecovery = new Shell("mount | grep /data");
         while (true) {
             try {
-                this.shell.exec();
+                waitRecovery.exec();
+                this.logger.add(waitRecovery);
             } catch (CommandErrorException e) {
                 continue;
+            } finally {
+                this.logger.add(waitRecovery.getOutput());
+                this.logger.add(waitRecovery.getReturnValue());
             }
             break;
         }
     }
 
     private void waitFastboot() throws InterruptedException, IOException {
+        /*
+        var getDevices = new GetDevices();
         while (true) {
             try {
-                this.getDevices.exec();
+                getDevices.exec();
+                this.logger.add(getDevices);
             } catch (CommandErrorException e) {
                 continue;
             }
-            if (this.getDevices.getMode().toString().equals("fastboot")) {
+            if (getDevices.getMode().toString().equals("fastboot")) {
                 break;
             }
         }
-    }
-
-    @Override
-    public String getOutput() {
-        switch (waitmode) {
-            case device: {
-                return this.shell.getOutput();
-            }
-            case recovery: {
-                return this.shell.getOutput();
-            }
-            case fastboot: {
-                return  this.getDevices.getOutput();
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public int getReturnValue() {
-        switch (waitmode) {
-            case device: {
-                return this.shell.getReturnValue();
-            }
-            case recovery: {
-                return this.shell.getReturnValue();
-            }
-            case fastboot: {
-                return this.getDevices.getReturnValue();
-            }
-        }
-        return -1;
+        */
     }
 }

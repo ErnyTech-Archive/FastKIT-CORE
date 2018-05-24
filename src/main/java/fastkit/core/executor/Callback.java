@@ -1,11 +1,11 @@
 package fastkit.core.executor;
 
 import fastkit.core.GenericApi;
+import fastkit.core.util.Logger;
 
 import java.util.List;
 
 public interface Callback {
-    void onSuccess(List<String> outputs, List<Integer> returnValues, List<GenericApi> adbApis);
-    void onError(Exception exception, List<GenericApi> adbApis);
-    void onError(Exception exception, String output, List<GenericApi> adbApis);
+    void onSuccess(Logger logger, List<GenericApi> adbApis);
+    void onError(Exception exception, Logger logger, List<GenericApi> adbApis);
 }

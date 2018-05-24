@@ -1,7 +1,8 @@
 package fastkit.core.fastboot;
 
-import fastkit.core.adb.GenericAdb;
+import fastkit.core.GenericApi;
 import fastkit.core.util.ExecCmd;
+import fastkit.core.util.Logger;
 import fastkit.core.util.exception.CommandErrorException;
 
 import java.io.File;
@@ -11,37 +12,24 @@ import java.util.List;
 
 import static fastkit.core.executor.Executor.fastboot;
 
-public class FlashRecovery implements GenericAdb {
+public class FlashRecovery implements GenericApi {
     private List<ExecCmd> execCmds = new ArrayList<>();
-    private StringBuilder outputs = new StringBuilder();
-    private List<Integer> returnValues = new ArrayList<>();
+    private Logger logger = new Logger();
 
     public FlashRecovery(File recovery) {
-        execCmds.add(new ExecCmd(fastboot + "erase recovery"));
-        execCmds.add(new ExecCmd(fastboot + "flash recovery" + sep + recovery));
+        this.execCmds.add(new ExecCmd(fastboot + "erase recovery", this.logger));
+        this.execCmds.add(new ExecCmd(fastboot + "flash recovery" + sep + recovery, this.logger));
     }
 
     @Override
     public void exec() throws InterruptedException, IOException, CommandErrorException {
-        for(ExecCmd execCmd : execCmds) {
+        for(ExecCmd execCmd : this.execCmds) {
             execCmd.exec();
-            outputs.append(execCmd.getStdout()).append(System.lineSeparator());
-            returnValues.add(execCmd.getReturnValue());
         }
     }
 
     @Override
-    public String getOutput() {
-        return outputs.toString();
-    }
-
-    @Override
-    public int getReturnValue() {
-        for(Integer value: this.returnValues) {
-            if (value != 0) {
-                return -1;
-            }
-        }
-        return 0;
+    public Logger getLog() {
+        return this.logger;
     }
 }

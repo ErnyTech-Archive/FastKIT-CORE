@@ -10,12 +10,20 @@ public class ExecCmd {
     private ProcessBuilder processBuilder;
     private int returnValue;
     private String stdout;
+    private Logger logger;
 
-    public  ExecCmd(String cmd) {
+    public ExecCmd(String cmd) {
         this.processBuilder = new ProcessBuilder()
                 .command(cmd.split("\\s+"))
                 .redirectErrorStream(true);
 
+    }
+
+    public ExecCmd(String cmd, Logger logger) {
+        this.processBuilder = new ProcessBuilder()
+                .command(cmd.split("\\s+"))
+                .redirectErrorStream(true);
+        this.logger = logger;
     }
 
     public void exec() throws IOException, InterruptedException, CommandErrorException {
@@ -29,6 +37,10 @@ public class ExecCmd {
         var stdout_stream = process.getInputStream();
         var stdout_scanner = new Scanner(stdout_stream).useDelimiter("\\A");
         this.stdout = stdout_scanner.hasNext() ? stdout_scanner.next().trim() : "";
+
+        if (this.logger != null) {
+            this.logger.add(this);
+        }
 
         if (this.returnValue != 0) {
             throw new CommandErrorException("Error when try execute command: " + System.lineSeparator() + this.stdout);

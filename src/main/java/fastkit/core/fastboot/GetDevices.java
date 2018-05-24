@@ -4,6 +4,7 @@ import fastkit.core.GenericApi;
 import fastkit.core.adb.Mode;
 import fastkit.core.util.Device;
 import fastkit.core.util.ExecCmd;
+import fastkit.core.util.Logger;
 import fastkit.core.util.exception.CommandErrorException;
 
 import static fastkit.core.executor.Executor.fastboot;
@@ -14,16 +15,13 @@ import java.util.List;
 
 public class GetDevices implements GenericApi {
     private List<Device> devices = new ArrayList<>();
-    private String output;
-    private int returnValue;
+    private Logger logger = new Logger();
 
     @Override
     public void exec() throws InterruptedException, IOException, CommandErrorException {
-        var execFastbootDevices = new ExecCmd(fastboot + "devices");
+        var execFastbootDevices = new ExecCmd(fastboot + "devices", this.logger);
         execFastbootDevices.exec();
-        this.output = execFastbootDevices.getStdout();
-        this.returnValue = execFastbootDevices.getReturnValue();
-        var outputs = this.output.split(System.lineSeparator());
+        var outputs = execFastbootDevices.getStdout().split(System.lineSeparator());
 
         for (String output : outputs) {
             output = output.trim();
@@ -45,17 +43,12 @@ public class GetDevices implements GenericApi {
         }
     }
 
+    @Override
+    public Logger getLog() {
+        return this.logger;
+    }
+
     public List<Device> get() {
         return this.devices;
-    }
-
-    @Override
-    public String getOutput() {
-        return this.output;
-    }
-
-    @Override
-    public int getReturnValue() {
-        return this.returnValue;
     }
 }
