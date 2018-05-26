@@ -19,23 +19,14 @@ public class AutoFastboot implements GenericApi {
 
     @Override
     public void exec() throws InterruptedException, IOException, CommandErrorException {
-        switch (this.fromMode) {
-            case device: {
-                var rebootFromDevice = new Reboot(Mode.fastboot);
-                rebootFromDevice.exec();
-                logger.add(rebootFromDevice);
-                break;
-            }
-            case recovery: {
-                var rebootFromRecovery = new Reboot(Mode.fastboot);
-                rebootFromRecovery.exec();
-                logger.add(rebootFromRecovery);
-                break;
-            }
+        if (this.fromMode == Mode.device || this.fromMode == Mode.recovery) {
+            var reboot = new Reboot(Mode.fastboot);
+            reboot.exec();
+            this.logger.add(reboot);
+            var waitBoot = new WaitBoot(Mode.fastboot);
+            waitBoot.exec();
+            this.logger.add(waitBoot);
         }
-        var waitBoot = new WaitBoot(Mode.fastboot);
-        waitBoot.exec();
-        logger.add(waitBoot);
     }
 
     @Override

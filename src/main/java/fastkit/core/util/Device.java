@@ -7,7 +7,6 @@ public class Device {
     private String deviceSerial;
     private String deviceModel;
 
-
     public Device(Mode deviceMode, String deviceSerial, String deviceModel) {
         this.deviceMode = deviceMode;
         this.deviceSerial = deviceSerial;

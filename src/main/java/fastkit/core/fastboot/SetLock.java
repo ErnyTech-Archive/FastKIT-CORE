@@ -13,8 +13,12 @@ public class SetLock implements GenericApi {
     private ExecCmd setLock;
     Logger logger = new Logger();
 
-    public SetLock(LockState lockState, String device) {
-        this.setLock = new ExecCmd(fastboot + getFastbootCmd(lockState, device), this.logger);
+    public SetLock(LockState lockState) {
+        this.setLock = new ExecCmd(fastboot +  "oem" + sep + lockState, this.logger);
+    }
+
+    public SetLock(LockState lockState, String lockcode) {
+        this.setLock = new ExecCmd(fastboot +  "oem" + sep + lockState + sep + lockcode, this.logger);
     }
 
 
@@ -26,17 +30,5 @@ public class SetLock implements GenericApi {
     @Override
     public Logger getLog() {
         return this.logger;
-    }
-
-    private String getFastbootCmd(LockState lockState, String device) {
-        switch (lockState) {
-            case lock: {
-                return "oem lock";
-            }
-            case unlock: {
-                return "oem unlock";
-            }
-        }
-        return null;
     }
 }

@@ -39,11 +39,11 @@ public class GetDevices implements GenericApi {
 
             switch (mode) {
                 case "device" : {
-                    devices.add(new Device(Mode.device, serial, model));
+                    this.devices.add(new Device(Mode.device, serial, model));
                     break;
                 }
                 case "recovery" : {
-                    devices.add(new Device(Mode.recovery, serial, model));
+                    this.devices.add(new Device(Mode.recovery, serial, model));
                     break;
                 }
             }

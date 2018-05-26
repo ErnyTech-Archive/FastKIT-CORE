@@ -14,6 +14,11 @@ public class AutoReboot implements GenericApi {
     private File deviceRecovery;
     private Logger logger = new Logger();
 
+    public AutoReboot(Mode toMode, Mode fromMode) {
+        this.toMode = toMode;
+        this.fromMode = fromMode;
+    }
+
     public AutoReboot(Mode toMode, Mode fromMode, File deviceRecovery) {
         this.toMode = toMode;
         this.fromMode = fromMode;
@@ -30,19 +35,19 @@ public class AutoReboot implements GenericApi {
             case device: {
                 var rebootToDevice = new AutoDevice(this.fromMode);
                 rebootToDevice.exec();
-                logger.add(rebootToDevice);
+                this.logger.add(rebootToDevice);
                 break;
             }
             case recovery: {
                 var rebootToRecovery = new AutoRecovery(this.fromMode, this.deviceRecovery);
                 rebootToRecovery.exec();
-                logger.add(rebootToRecovery);
+                this.logger.add(rebootToRecovery);
                 break;
             }
             case fastboot: {
                 var rebootToFastboot = new AutoFastboot(this.fromMode);
                 rebootToFastboot.exec();
-                logger.add(rebootToFastboot);
+                this.logger.add(rebootToFastboot);
                 break;
             }
         }

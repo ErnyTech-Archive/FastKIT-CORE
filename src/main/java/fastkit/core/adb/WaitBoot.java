@@ -1,6 +1,7 @@
 package fastkit.core.adb;
 
 import fastkit.core.GenericApi;
+import fastkit.core.fastboot.GetVar;
 import fastkit.core.util.Logger;
 import fastkit.core.util.exception.CommandErrorException;
 
@@ -15,7 +16,7 @@ public class WaitBoot implements GenericApi {
     }
 
     @Override
-    public void exec() throws InterruptedException, IOException {
+    public void exec() throws InterruptedException, IOException, CommandErrorException {
         switch (this.waitmode) {
             case device: {
                 waitSystem();
@@ -47,8 +48,7 @@ public class WaitBoot implements GenericApi {
             } catch (CommandErrorException e) {
                 continue;
             } finally {
-                this.logger.add(waitSystem.getOutput());
-                this.logger.add(waitSystem.getReturnValue());
+                this.logger.add(waitSystem);
             }
 
             try {
@@ -75,31 +75,18 @@ public class WaitBoot implements GenericApi {
         while (true) {
             try {
                 waitRecovery.exec();
-                this.logger.add(waitRecovery);
             } catch (CommandErrorException e) {
                 continue;
             } finally {
-                this.logger.add(waitRecovery.getOutput());
-                this.logger.add(waitRecovery.getReturnValue());
+                this.logger.add(waitRecovery);
             }
             break;
         }
     }
 
-    private void waitFastboot() throws InterruptedException, IOException {
-        /*
-        var getDevices = new GetDevices();
-        while (true) {
-            try {
-                getDevices.exec();
-                this.logger.add(getDevices);
-            } catch (CommandErrorException e) {
-                continue;
-            }
-            if (getDevices.getMode().toString().equals("fastboot")) {
-                break;
-            }
-        }
-        */
+    private void waitFastboot() throws InterruptedException, IOException, CommandErrorException {
+        var getVar = new GetVar();
+        getVar.exec();
+        this.logger.add(getVar);
     }
 }

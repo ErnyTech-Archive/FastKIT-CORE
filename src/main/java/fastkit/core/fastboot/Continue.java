@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import static fastkit.core.executor.Executor.fastboot;
 
-public class FastbootContinue implements GenericApi {
+public class Continue implements GenericApi {
     private Logger logger = new Logger();
 
     @Override

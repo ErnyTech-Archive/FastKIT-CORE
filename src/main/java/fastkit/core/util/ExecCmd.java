@@ -30,6 +30,7 @@ public class ExecCmd {
         if (Thread.currentThread().isInterrupted()) {
             throw new InterruptedException("Thread is Interrupted");
         }
+
         var process = this.processBuilder.start();
         process.waitFor();
 

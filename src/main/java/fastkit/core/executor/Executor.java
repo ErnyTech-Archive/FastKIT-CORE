@@ -1,9 +1,7 @@
 package fastkit.core.executor;
 
 import fastkit.core.GenericApi;
-import fastkit.core.adb.GetDevices;
 import fastkit.core.adb.Mode;
-import fastkit.core.adb.Shell;
 import fastkit.core.util.Device;
 import fastkit.core.util.Logger;
 import fastkit.core.util.exception.CommandErrorException;
