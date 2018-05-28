@@ -8,20 +8,23 @@ import java.util.Scanner;
 
 public class ExecCmd {
     private ProcessBuilder processBuilder;
+    private String cmd;
     private int returnValue;
     private String stdout;
     private Logger logger;
 
     public ExecCmd(String cmd) {
+        this.cmd = cmd; 
         this.processBuilder = new ProcessBuilder()
-                .command(cmd.split("\\s+"))
+                .command(this.cmd.split("\\s+"))
                 .redirectErrorStream(true);
 
     }
 
     public ExecCmd(String cmd, Logger logger) {
+        this.cmd = cmd; 
         this.processBuilder = new ProcessBuilder()
-                .command(cmd.split("\\s+"))
+                .command(this.cmd.split("\\s+"))
                 .redirectErrorStream(true);
         this.logger = logger;
     }
@@ -53,6 +56,9 @@ public class ExecCmd {
         stdout_log.add(this.stdout);
     }
 
+    public String getCommand() {
+        return this.cmd;
+    }
     public int getReturnValue() {
         return this.returnValue;
     }

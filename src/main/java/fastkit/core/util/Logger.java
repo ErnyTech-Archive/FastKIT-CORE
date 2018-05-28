@@ -18,7 +18,7 @@ public class Logger {
     }
 
     public void add(ExecCmd execCmd) {
-        this.outputs.add(execCmd.getStdout());
+        this.outputs.add("Command : " + execCmd.getCommand() + System.lineSeparator() + execCmd.getStdout());
         this.returnValues.add(execCmd.getReturnValue());
     }
 

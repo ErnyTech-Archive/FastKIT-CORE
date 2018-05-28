@@ -38,7 +38,7 @@ public class GetDevices implements GenericApi {
             var serial = output.split("\\s+")[0].trim();
 
             if(mode.equals("fastboot")) {
-                devices.add(new Device(Mode.fastboot, serial, null));
+                devices.add(new Device(Mode.fastboot, serial, null, null));
             }
         }
     }

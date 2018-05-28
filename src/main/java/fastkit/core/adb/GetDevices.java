@@ -36,14 +36,15 @@ public class GetDevices implements GenericApi {
             var mode = output.split("\\s+")[1].trim();
             var serial = output.split("\\s+")[0].trim();
             var model = foundDeviceModel();
+            var product = foundDeviceProduct();
 
             switch (mode) {
                 case "device" : {
-                    this.devices.add(new Device(Mode.device, serial, model));
+                    this.devices.add(new Device(Mode.device, serial, model, product));
                     break;
                 }
                 case "recovery" : {
-                    this.devices.add(new Device(Mode.recovery, serial, model));
+                    this.devices.add(new Device(Mode.recovery, serial, model, product));
                     break;
                 }
             }
@@ -61,6 +62,17 @@ public class GetDevices implements GenericApi {
 
     private String foundDeviceModel() throws InterruptedException, IOException, CommandErrorException {
         var shell = new Shell("getprop | grep ro.product.model");
+        shell.exec();
+        this.logger.add(shell);
+        return shell.getOutput()
+                .split(":")[1]
+                .replace("[", "")
+                .replace("]", "")
+                .trim();
+    }
+    
+    private String foundDeviceProduct() throws InterruptedException, IOException, CommandErrorException {
+        var shell = new Shell("getprop | grep ro.product.device");
         shell.exec();
         this.logger.add(shell);
         return shell.getOutput()
